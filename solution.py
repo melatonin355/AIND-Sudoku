@@ -12,8 +12,9 @@ def assign_value(values, box, value):
         assignments.append(values.copy())
     return values
 
-# Given two locations of naked twins in a peergroup
-# removes twin elements and returns values
+# Naked Twins algorithm helper
+# Input two box locations that are naked twins
+# output a dictionary with the naked twins algorithm applied to it.
 def naked_twins_clean(box1, box2, values):
     twin_values = values[box1] # twin ex '17'
     #solved_values = [box for box in values.keys() if len(values[box]) > 2] # Any location with more than 2 elements
@@ -27,12 +28,11 @@ def naked_twins_clean(box1, box2, values):
 
     return values
 
-# Returns the peer intersection of box1 and box2
+# Finds the intersection of two boxes
+# given two naked twins, finds intersection of them and returns array[array]
 def intersection_boxes(box1, box2):
 
-    #column_units = [['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1']]
-    #search = ['A1', 'C7']
-    intersection = []
+    intersection = [] # Array of intersections
 
     for column in column_units:
         if all(w in column for w in [box1, box2]):
@@ -44,7 +44,6 @@ def intersection_boxes(box1, box2):
         if all(w in square for w in [box1, box2]):
             intersection.append(square)
 
-    #print("inter", intersection)
     return intersection
 
 
@@ -55,8 +54,6 @@ def naked_twins(values):
         digit = values[box]
         for peer in peers[box]:
             if digit == values[peer]:
-                #print("found twin:", box, peer)
-                #print("Search for ", peer+ ":" + digit+" and" + box + values[box] )
                 values = naked_twins_clean(box,peer, values)
     return values
 
