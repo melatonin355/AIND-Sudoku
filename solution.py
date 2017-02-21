@@ -1,6 +1,7 @@
 from utils import *
 assignments = []
 
+
 def assign_value(values, box, value):
     """
     Please use this function to update your values dictionary!
@@ -11,21 +12,59 @@ def assign_value(values, box, value):
         assignments.append(values.copy())
     return values
 
+# Given two locations of naked twins in a peergroup
+# removes twin elements and returns values
+def naked_twins_clean(box1, box2, values):
+    twin_values = values[box1] # twin ex '17'
+    #solved_values = [box for box in values.keys() if len(values[box]) > 2] # Any location with more than 2 elements
+    intersection = intersection_boxes(box1, box2)
+    # go through each intersect and replace twin values
+    for intersect in intersection:
+        for element in intersect:
+            if len(values[element]) > 2:
+                values[element] = values[element].replace(twin_values[0],'')
+                values[element] = values[element].replace(twin_values[1],'')
+
+    return values
+
+# Returns the peer intersection of box1 and box2
+def intersection_boxes(box1, box2):
+
+    #column_units = [['A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1', 'I1']]
+    #search = ['A1', 'C7']
+    intersection = []
+
+    for column in column_units:
+        if all(w in column for w in [box1, box2]):
+            intersection.append(column)
+    for row in row_units:
+        if all(w in row for w in [box1, box2]):
+            intersection.append(row)
+    for square in square_units:
+        if all(w in square for w in [box1, box2]):
+            intersection.append(square)
+
+    #print("inter", intersection)
+    return intersection
+
+
 def naked_twins(values):
-    """Eliminate values using the naked twins strategy.
-    Args:
-        values(dict): a dictionary of the form {'box_name': '123456789', ...}
+    solved_values = [box for box in values.keys() if len(values[box]) == 2] # Any location with only 2 elements
 
-    Returns:
-        the values dictionary with the naked twins eliminated from peers.
-    """
+    for box in solved_values:
+        digit = values[box]
+        for peer in peers[box]:
+            if digit == values[peer]:
+                #print("found twin:", box, peer)
+                #print("Search for ", peer+ ":" + digit+" and" + box + values[box] )
+                values = naked_twins_clean(box,peer, values)
+    return values
 
-    # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
 
 def cross(A, B):
     "Cross product of elements in A and elements in B."
     return [s + t for s in A for t in B]
+
 
 def grid_values(grid):
     """
@@ -47,6 +86,7 @@ def grid_values(grid):
     assert len(values) == 81
     return dict(zip(boxes, values))
 
+
 def display(values):
     """
     Display the values as a 2-D grid.
@@ -61,6 +101,7 @@ def display(values):
         if r in 'CF': print(line)
     return
 
+
 def eliminate(values):
     solved_values = [box for box in values.keys() if len(values[box]) == 1]
 
@@ -70,6 +111,7 @@ def eliminate(values):
             values[peer] = values[peer].replace(digit,'')
     return values
 
+
 def only_choice(values):
     for unit in unitlist:
         for digit in '123456789':
@@ -77,6 +119,7 @@ def only_choice(values):
             if len(dplaces) == 1:
                 values[dplaces[0]] = digit
     return values
+
 
 def reduce_puzzle(values):
     stalled = False
@@ -96,6 +139,7 @@ def reduce_puzzle(values):
             return False
     return values
 
+
 def search(values):
     "Using depth-first search and propagation, try all possible values."
     # First, reduce the puzzle using the previous function
@@ -114,6 +158,7 @@ def search(values):
         if attempt:
             return attempt
 
+
 def solve(grid):
     """
     Find the solution to a Sudoku grid.
@@ -125,6 +170,7 @@ def solve(grid):
     """
     #changeme
     return search(grid_values(grid))
+    #return naked_twins(grid)
 
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
