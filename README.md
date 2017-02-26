@@ -3,11 +3,12 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?
-A: By finding a pair of matching twins in a board we can eliminate those values from neighboring cells.
+A:
+By finding a pair of matching twins in a board we can eliminate those values from neighboring cells.  The two boxes with the naked twins provide local solutions that satisfies the global contraint. This in turn alows us to continue to find solutions for other boxes while still staying within the global contraints. More specifically the naked twins remove possible solutions from other boxes which allows the algorithm to converge to a final solution in a more effecient manner.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?
-A: By adding the diagonals to the peers being solved for we can eliminate possible values which are propagated to its neighbors.
+A: By adding the diagonals to the peers being solved for we can eliminate possible values which are propagated to its neighbors. We are adding the diagonals into the set of contraints in order to solve the global problem. We can use contraint propagation to focus on finding a solution for the diagonals without having to worry about all the possible solutions as a whole.
 
 
 ![sudoku](images/sudoku.png)
